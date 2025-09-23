@@ -284,7 +284,7 @@ Namespace Microsoft.SmallVisualBasic.LanguageService
                             .Summary = If(item.DisplayName = "Me",
                                  $"Me is a global variable that referes to the current form, which is {item.Key} in this context. " &
                                  $"You can use this variable as an object like Me.Left = 0",
-                                 $"A global variable that referes to a {item.ObjectName} control that you created by the form designer. " &
+                                 $"A global variable for a {item.ObjectName} control created by the form designer. " &
                                  $"You can use this variable as an object like {item.DisplayName}.Left = 0"
                             )
                     }

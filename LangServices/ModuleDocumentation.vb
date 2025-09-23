@@ -28,31 +28,36 @@ Namespace Microsoft.SmallVisualBasic.LanguageService
 
         Private Function GetLocalizedModuleDocPath(modulePath As String) As String
             Dim directoryName = Path.GetDirectoryName(modulePath)
-            Dim fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modulePath)
-            Dim ietfLanguageTag = CultureInfo.CurrentUICulture.IetfLanguageTag
-            Dim text = Path.Combine(directoryName, $"{fileNameWithoutExtension}.{ietfLanguageTag}.xml")
+            Dim fileName = Path.GetFileNameWithoutExtension(modulePath)
 
-            If File.Exists(text) Then
-                Return text
+            Dim docPath = GetLocalizedDocPath(directoryName, fileName, CultureInfo.CurrentUICulture)
+            If docPath = "" Then
+                docPath = GetLocalizedDocPath(directoryName, fileName, CultureInfo.CurrentCulture)
             End If
 
-            ietfLanguageTag = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
-            text = Path.Combine(directoryName, $"{fileNameWithoutExtension}.{ietfLanguageTag}.xml")
-
-            If File.Exists(text) Then
-                Return text
+            If docPath = "" Then
+                docPath = Path.Combine(directoryName, fileName & ".xml")
             End If
 
-            If CultureInfo.CurrentUICulture.Parent IsNot Nothing Then
-                ietfLanguageTag = CultureInfo.CurrentUICulture.Parent.IetfLanguageTag
-                text = Path.Combine(directoryName, $"{fileNameWithoutExtension}.{ietfLanguageTag}.xml")
+            Return docPath
+        End Function
 
-                If File.Exists(text) Then
-                    Return text
-                End If
+        Private Shared Function GetLocalizedDocPath(directoryName As String, fileName As String, cult As CultureInfo) As String
+            Dim ietfLanguageTag = cult.IetfLanguageTag
+            Dim text = Path.Combine(directoryName, $"{fileName}.{ietfLanguageTag}.xml")
+            If File.Exists(text) Then Return text
+
+            ietfLanguageTag = cult.TwoLetterISOLanguageName
+            text = Path.Combine(directoryName, $"{fileName}.{ietfLanguageTag}.xml")
+            If File.Exists(text) Then Return text
+
+            If cult.Parent IsNot Nothing Then
+                ietfLanguageTag = cult.Parent.IetfLanguageTag
+                text = Path.Combine(directoryName, $"{fileName}.{ietfLanguageTag}.xml")
+                If File.Exists(text) Then Return text
             End If
 
-            Return Path.Combine(directoryName, fileNameWithoutExtension & ".xml")
+            Return ""
         End Function
 
         Private Sub ProcessDocumentation(xmlFilePath As String)

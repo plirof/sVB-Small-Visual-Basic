@@ -67,17 +67,23 @@ Namespace WinForms
 
         Private Shared Function GetLocalCulture() As CultureInfo
             If localCulture Is Nothing Then
-                Try
-                    Dim langs = System.Windows.Input.InputLanguageManager.Current.AvailableInputLanguages.GetEnumerator()
-                    langs.MoveNext()
-                    If langs.MoveNext() Then
-                        localCulture = langs.Current
-                    Else
-                        localCulture = CultureInfo.CurrentCulture
-                    End If
-                Catch ex As Exception
+                If CultureInfo.CurrentCulture.IetfLanguageTag <> "en" Then
                     localCulture = CultureInfo.CurrentCulture
-                End Try
+                ElseIf CultureInfo.CurrentUICulture.IetfLanguageTag <> "en" Then
+                    localCulture = CultureInfo.CurrentUICulture
+                Else
+                    Try
+                        Dim langs = System.Windows.Input.InputLanguageManager.Current.AvailableInputLanguages.GetEnumerator()
+                        langs.MoveNext()
+                        If langs.MoveNext() Then
+                            localCulture = langs.Current
+                        Else
+                            localCulture = CultureInfo.CurrentCulture
+                        End If
+                    Catch ex As Exception
+                        localCulture = CultureInfo.CurrentCulture
+                    End Try
+                End If
             End If
             Return localCulture
         End Function

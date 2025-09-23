@@ -4,7 +4,8 @@
           xmlns:lu="clr-namespace:Microsoft.SmallVisualBasic.Utility" 
           xmlns:sb="clr-namespace:Microsoft.SmallVisualBasic" 
           Height="0" BorderThickness="0" Background="#00FFFFFF" 
-          FlowDirection="{x:Static sb:App.FlowDirection}" 
+          FlowDirection="{x:Static sb:App.FlowDirection}"
+          FontSize="14"
           xmlns:shell="clr-namespace:Microsoft.SmallVisualBasic.Shell">
     
   <Control.Template>

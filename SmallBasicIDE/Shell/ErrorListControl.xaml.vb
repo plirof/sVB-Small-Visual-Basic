@@ -92,5 +92,26 @@ Namespace Microsoft.SmallVisualBasic.Shell
             DoubleAnimateHeight(0.0)
         End Sub
 
+        Private Sub ErrorListControl_PreviewMouseWheel(sender As Object, e As MouseWheelEventArgs) Handles Me.PreviewMouseWheel
+            If (Keyboard.Modifiers And ModifierKeys.Control) > 0 Then
+                If e.Delta > 0 Then
+                    Me.FontSize = Math.Min(30, Me.FontSize + 1)
+                Else
+                    Me.FontSize = Math.Max(10, Me.FontSize - 1)
+                End If
+                e.Handled = True
+            End If
+        End Sub
+
+        Private Sub ErrorListControl_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles Me.PreviewKeyDown
+            If (Keyboard.Modifiers And ModifierKeys.Control) > 0 Then
+                If e.Key = Key.OemPlus Then
+                    Me.FontSize = Math.Min(30, Me.FontSize + 1)
+                ElseIf e.Key = Key.OemMinus Then
+                    Me.FontSize = Math.Max(10, Me.FontSize - 1)
+                End If
+                e.Handled = True
+            End If
+        End Sub
     End Class
 End Namespace
