@@ -1,11 +1,11 @@
 <div style="text-align:center;">
   <h1>Small Visual Basic 3.5</h1>
+  <H2">You can download the sVB installer from the <a href="https://marketplace.visualstudio.com/items?itemName=ModernVBNET.sVBInstaller"><u>VS marketplace</u></a>.</h2>
   <h2>Meet the sVB little daughter, <a href="https://marketplace.visualstudio.com/items?itemName=ModernVBNET.Sahla">Sahla</a></h2>
   <h3>Sahla is a native Basic-dialect written with sVB. It started with the Arabic dialect, and it also has English and Serbian dialects now.</h3>
   <p style="font-size:1.2em;">You can easily customize Sahla by translating its keywords into your language to have your own localized Basic dialect.</p>
   <b><span style="color:red;">Starting from sVB 3.5.8, you can localize the language documentation that pops up when you move to any code item. A Serbian documentation file, SmallVisualBasicLibrary.sr.xml, is included in the bin folder, thanks to Dr. Aca Cvetkovi?. You can also localize the SmallVisualBasicLibrary.xml file (but keep the xml tags untouched), give it a local sub extension like SmallVisualBasicLibrary.fr.xml, and place it in the "Modern VB\Small Visual Basic 3.5.8\Bin" folder in your installation folder like "C:\Program Files (x86)\Modern VB\Small Visual Basic 3.5.8\Bin" to make sVB show your localized docs.</span></b>
 </div>
-<span style="font-size:2em;">You can download the sVB installer from the <a href="https://marketplace.visualstudio.com/items?itemName=ModernVBNET.sVBInstaller"><u>VS marketplace</u></a>.</span>
 <br><br>
 <p align="center">
   <img src="https://modernvbnet.gallerycdn.vsassets.io/extensions/modernvbnet/svbinstaller/3.0/1714546030343/image.png"/>
