@@ -1,0 +1,41 @@
+﻿Times New Roman
+20
+False
+False
+False
+#FF000000
+#FFFFFFFF
+False
+True
+False
+' "Sahla" Programming Language Rules: 8. Turtle Graphics
+' ------------------------------------------------------------------------
+
+' Read the explanation and run this program to execute the examples to see the results
+
+' The turtle is a simple tool for drawing basic or complex geometric shapes.
+' The turtle moves in a straight line in the direction it is facing, and draws a line as it moves.
+' The command 'move turtle' followed by a numeric value moves the turtle the desired distance. Example:
+Move Turtle 150
+' This command will make the turtle move upward by 150 units, drawing a straight line as it goes
+
+' Initially, the turtle faces upward, where its angle is zero.
+' But you can change its direction using the command 'turn turtle' followed by an angle.
+' This angle will be added to the turtle's current angle.
+' The following example shows how to complete the previous line into a triangle:
+Turn Turtle 120
+Move Turtle 150
+Turn Turtle 120
+Move Turtle 150
+
+' By default, the turtle is slow, to help you understand how shapes are drawn.
+' But you may need to use the 'speed turtle' command to speed it up when drawing complex shapes.
+' This command sets the turtle's speed to 25, which is a medium speed
+' But you can control the speed further by writing a number between 1 and 50 after the command, like:
+Speed Turtle 30
+' This command will affect the turtle's movement in the following code,
+' so you'll notice it's faster when drawing a square in this code:
+For n = 1 To 4
+    Move Turtle 150
+    Turn Turtle 90
+Next n

@@ -1,0 +1,26 @@
+﻿Times New Roman
+20
+False
+False
+False
+#FF000000
+#FFFFFFFF
+False
+True
+False
+Speed Turtle 50
+Write "Enter square count: "
+squares = Read Number
+Write "Enter side length: "
+length = Read Number
+angle =  360 / squares
+
+For n = 1 To squares
+    ' Draw a square
+    For m = 1 To 4
+        Move Turtle length
+        Turn Turtle 90
+    Next m
+    ' Rotate turtle to rotate next square
+    Turn Turtle angle
+Next n

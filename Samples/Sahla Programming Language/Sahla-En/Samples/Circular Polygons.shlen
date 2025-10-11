@@ -1,0 +1,27 @@
+﻿Times New Roman
+20
+False
+False
+False
+#FF000000
+#FFFFFFFF
+False
+True
+False
+Speed Turtle 50
+Write "Enter polygon count: "
+polygons = Read Number
+Write "Enter side count: "
+sides = Read Number
+Write "Enter side length: "
+length = Read Number
+
+For p = 1 To polygons
+    ' Draw Polygon
+    For m = 1 To sides
+        Move Turtle length
+        Turn Turtle  360 / sides
+    Next m
+    ' rotate turtle to roteate the next polygon
+    Turn Turtle  360 / polygons
+Next p

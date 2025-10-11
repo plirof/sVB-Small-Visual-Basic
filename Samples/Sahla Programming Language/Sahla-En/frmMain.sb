@@ -54,6 +54,18 @@ IsModified = False
 TxtEditor.Focus()
 Global.StartColoringTimer()
 OnScroll()
+GWTimer = Me.AddTimer("GWTimer", 20)
+GWTimer.OnTick = EnableMainWindow
+GWTimer.Pause()
+
+Sub EnableMainWindow()
+   If GW.IsClosed Then
+      GWTimer.Pause()
+      Me.Enabled = True
+      Me.Focus()
+      TxtEditor.Focus()
+   EndIf
+EndSub
 
 Sub Form_OnShown()
    TxtEditor.OnScroll = OnScroll
@@ -472,13 +484,10 @@ EndSub
 
 Sub MnuRun_OnClick()
    FormatCode()
-   
    Me.Enabled = False
    TW.Title = "Text Window"
    Global.Run()
-   Me.Enabled = True
-   Me.Focus()
-   TxtEditor.Focus()
+   GWTimer.Resume()
 EndSub
 
 Function GetPath(filePath)
@@ -987,5 +996,12 @@ Sub MnuAddSoundPath_OnClick()
       TxtEditor.SelectedText = """" & fileName & """"
       TxtEditor.Focus()
       TxtEditor.SelectionStart = TxtEditor.SelectionStart + TxtEditor.SelectionLength
+   EndIf
+EndSub
+
+
+Sub MnuTurtle_OnClick()
+   If AskToSave() Then
+      Open(GetPath("Syntax/9.shlen"))
    EndIf
 EndSub

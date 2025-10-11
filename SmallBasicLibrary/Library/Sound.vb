@@ -394,19 +394,19 @@ Namespace Library
         End Sub
 
         Private Shared Sub PlayNote(number As Integer)
-            Dim dwMsg As UInteger = BitConverter.ToUInt32(New Byte(3) {
+            Dim dwMsg = BitConverter.ToUInt32(New Byte(3) {
                 144,
                 CByte(number),
-                100,
+                _volume.AsDecimal * 127 / 100,
                 0
             }, 0)
             NativeHelper.midiOutShortMsg(_midiOut, dwMsg)
         End Sub
 
-        Private Shared Sub ChangeInstrument(number As Integer)
-            Dim dwMsg As UInteger = BitConverter.ToUInt32(New Byte(3) {
+        Private Shared Sub ChangeInstrument(InstrumentNumber As Byte)
+            Dim dwMsg = BitConverter.ToUInt32(New Byte(3) {
                 192,
-                CByte(number),
+                InstrumentNumber,
                 0,
                 0
             }, 0)

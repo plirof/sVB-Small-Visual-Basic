@@ -56,6 +56,15 @@ Namespace Library
         Private Shared _syncLock As New Object
 
         ''' <summary>
+        ''' Closes the graphics window.
+        ''' </summary>
+        Public Shared Sub Close()
+            If _windowCreated Then
+                _window.Close()
+            End If
+        End Sub
+
+        ''' <summary>
         ''' Gets or sets whether or not the Graphics Window is the top most window that always appears on top of all other desktop windows even when it is not the active window.
         ''' </summary>
         <WinForms.ReturnValueType(VariableType.Boolean)>
@@ -1082,7 +1091,10 @@ Namespace Library
 
 
         Private Shared _aliasedEdgeMode As Boolean = False
-
+        ''' <summary>
+        ''' Set this property to True to turn anti-aliasing off. This can fix any issues in thickness of drawn lines.
+        ''' </summary>
+        ''' <returns></returns>
         <WinForms.ReturnValueType(VariableType.Boolean)>
         Public Shared Property AliasedEdgeMode As Primitive
             Get

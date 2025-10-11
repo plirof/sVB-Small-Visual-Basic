@@ -283,7 +283,9 @@ Namespace Library
             End Set
         End Property
 
-        <HideFromIntellisense>
+        ''' <summary>
+        ''' Closes the TextWindow. This will end the program if there are no other windows open.
+        ''' </summary>
         Public Shared Sub Close()
             SmallBasicApplication.Invoke(
                 Sub()

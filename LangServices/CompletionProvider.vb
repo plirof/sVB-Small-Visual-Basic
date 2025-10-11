@@ -803,8 +803,6 @@ Namespace Microsoft.SmallVisualBasic.LanguageService
 
         End Function
 
-
-
         Private Shared Function IsPrevSeparator(
                     currentLine As Integer,
                     symbole As String,
@@ -942,6 +940,9 @@ Namespace Microsoft.SmallVisualBasic.LanguageService
 
                     adornment.ModifySpans(adornmentSpan, replaceSpan)
                 End If
+
+            ElseIf textChange.Delta < 0 Then
+                ShowCompletionAdornment(e.After, newEnd)
 
             ElseIf newText <> "" Then
                 Dim c = newText.Last
@@ -1106,7 +1107,7 @@ Namespace Microsoft.SmallVisualBasic.LanguageService
                     Dim txt = currentToken.LCaseText
                     If txt <> "" AndAlso controlNames IsNot Nothing Then
                         Dim x = currentToken.Text
-                        Dim txt2 = UCase(x(0)) & If(x.Length > 1, x.Substring(0), "")
+                        Dim txt2 = UCase(x(0)) & If(x.Length > 1, x.Substring(1), "")
                         Dim controls = From name In controlNames
                                        Where name(0) <> "("c AndAlso (
                                            (forHelp AndAlso name.ToLower() = txt) OrElse

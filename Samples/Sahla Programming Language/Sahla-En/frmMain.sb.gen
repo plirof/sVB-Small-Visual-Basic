@@ -45,6 +45,7 @@
 '    MnuConditions: MenuItem
 '    MnuLoops: MenuItem
 '    MnuSounds: MenuItem
+'    MnuTurtle: MenuItem
 '    MnuLocalize: MenuItem
 '    MnuAbout: MenuItem
 '}
@@ -95,6 +96,7 @@ MnuInput = "frmmain.mnuinput"
 MnuConditions = "frmmain.mnuconditions"
 MnuLoops = "frmmain.mnuloops"
 MnuSounds = "frmmain.mnusounds"
+MnuTurtle = "frmmain.mnuturtle"
 MnuLocalize = "frmmain.mnulocalize"
 MnuAbout = "frmmain.mnuabout"
 _path = Program.Directory + "\frmmain.xaml"
@@ -128,6 +130,7 @@ Form.SetArgsArr(frmmain, Stack.PopValue("_frmmain_argsArr"))
 '    TxtEditor: OnTextChanged OnTextInput OnKeyDown OnSelection OnMouseWheel OnMouseRightDown OnMouseLeftDown
 '    MnuAbout: OnClick
 '    FrmMain: OnClosing OnShown
+'    MnuTurtle: OnClick
 '    MnuAddSoundPath: OnClick
 '    MnuLocalize: OnClick
 '    MnuSounds: OnClick
@@ -256,6 +259,10 @@ MenuItem.OnClick = MnuAbout_OnClick
 Control.HandleEvents(FrmMain)
 Form.OnClosing = FrmMain_OnClosing
 Form.OnShown = Form_OnShown
+
+' MnuTurtle Events:
+Control.HandleEvents(MnuTurtle)
+MenuItem.OnClick = MnuTurtle_OnClick
 
 ' MnuAddSoundPath Events:
 Control.HandleEvents(MnuAddSoundPath)

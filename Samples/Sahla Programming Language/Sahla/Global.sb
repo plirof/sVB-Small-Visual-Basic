@@ -25,6 +25,10 @@ _Text1 = "نصا"
 _Text2 = "النص"
 _Number1 = "عددا"
 _Number2 = "العدد"
+_Move = "حرك"
+_Turn = "دور"
+_Speed = "سرعة"
+_Turtle = "السلحفاة"
 _Random = "عشوائي"
 _Wait = "انتظر"
 _Sound = "صوت"
@@ -39,13 +43,18 @@ _CommentSymbol = "#"
 BasicWords = {
    _True, _False, _If, _Else, _ElseIf, _EndIf, _And, _Or,
    _While, _Wend, _For, _To1, _To2, _Step, _Next, _ExitLoop,
-   _Write, _Line1, _Line2, _Read, _Text1, _Text2, _Number1, _Number2,
+   _Write, _Line1, _Line2,
+   _Read, _Text1, _Text2, _Number1, _Number2,
+   _Move, _Turn, _Speed, _Turtle,
    _Wait, _Random, _Sound, _Beep, _Bell, _Ding, _Click, _Chime
 }
 
 CommandsCompletionList = {
    _Write,
    _Write & " " & _Line2,
+   _Move & " " & _Turtle,
+   _Turn & " " & _Turtle,
+   _Speed & " " & _Turtle,
    _If, _Else, _ElseIf, _EndIf,
    _While, _Wend, _For, _Next, _ExitLoop,
    _Wait,
@@ -209,6 +218,7 @@ EndSub
 Sub Run()
    Terminated = False
    TW.Clear()
+   TW.Hide()
    Vars = {}
    Stack.Clear(WhileStack)
    Stack.Clear(ForStack)
@@ -218,7 +228,7 @@ Sub Run()
    LineIndex = 1
    statementsCount = Statements.Count
    
-   While LineIndex <= statementsCount
+   While Terminated = False And LineIndex <= statementsCount
       Tokenize(Statements[LineIndex], LineIndex, _CommentSymbol)
       ExecuteLine()
       If LineIndex <= Statements.Count Then
@@ -232,7 +242,6 @@ Sub Run()
    Wend
    
    Terminate(ProEndMsg, False)
-   EditorTextBox.Focus()
 EndSub
 
 Sub EndProgram()
@@ -241,30 +250,40 @@ EndSub
 
 Sub Terminate(msg, isError)
    If isError Then
-      TW.AppendFormatted(
-         Chars.Lf & msg,
-         "", 20,
-         True, False, False,
-         Colors.Red, Colors.Yellow
-      )
-   Else
+      If GW.IsClosed = False Then
+         GW.ShowMessage(msg, "Error")
+         GW.Close()
+      Else
+         TW.AppendFormatted(
+            Chars.Lf & msg,
+            "", 20,
+            True, False, False,
+            Colors.Red, Colors.Yellow
+         )
+      EndIf
+      
+   ElseIf GW.IsClosed Then
       TW.Write(Chars.Lf & msg)
+      TW.PauseWithoutMessage()
+      TW.Close()
+      
+   Else
+      TW.Close()
+      GW.Show()
    EndIf
-   
-   TW.PauseWithoutMessage()
-   TW.Close()
 EndSub
 
 Sub ExecuteLine()
    tokensCount = Tokens.Count
    
-   If tokensCount = 0 Or TW.IsClosed Then
+   If tokensCount = 0 Or Terminated Or TW.IsClosed Then
       Return
    EndIf
    
    command = Text.Trim(Tokens[1][3])
    If command[1] = _CommentSymbol Then ' Ignore the comment
       Return
+      
    ElseIf command = _Wait Then
       If tokensCount = 1 Then
          Program.Delay(1000)
@@ -282,6 +301,7 @@ Sub ExecuteLine()
             ReportError("'" & t & "' لا تصلح كمدة زمنية", LineIndex, 2)
          EndIf
       EndIf
+      
    ElseIf command = _Write Then
       nextCommand = Tokens[2][3]
       If tokensCount = 1 Then
@@ -299,7 +319,7 @@ Sub ExecuteLine()
             EndIf
          EndIf
          
-         If TW.IsClosed Then
+         If Terminated Or TW.IsClosed Then
             Return
          EndIf
          TW.WriteLine(FixBool(msg))
@@ -312,10 +332,47 @@ Sub ExecuteLine()
             Return
          EndIf
          
-         If TW.IsClosed Then
+         If Terminated Or TW.IsClosed Then
             Return
          EndIf
          TW.Write(FixBool(result[1]))
+      EndIf
+      
+   ElseIf command = _Move Or command = _Turn Or command = _Speed Then
+      nextCommand = Tokens[2][3]
+      If tokensCount = 1 Or nextCommand <> _Turtle Then
+         ReportError("كلمة '" & _Turtle & "' مفقودة.", LineIndex, 1)
+      Else
+         If tokensCount = 2 Then
+            arg = "?"
+         Else
+            result = EvaluateExpression(3)
+            arg = result[1]
+            nextPos = result[2]
+            If nextPos < tokensCount Then
+               ReportError("'" & Tokens[nextPos][3] & "' غير متوقعة هنا", LineIndex, nextPos)
+               Return
+            EndIf
+         EndIf
+         
+         If Terminated Or TW.IsClosed Then
+            Return
+         ElseIf command = _Move Then
+            If arg = "?" Then
+               arg = 100
+            EndIf
+            Turtle.Move(arg)
+         ElseIf command = _Turn Then
+            If arg = "?" Then
+               arg = 90
+            EndIf
+            Turtle.Turn(arg)
+         Else
+            If arg = "?" Then
+               arg = 25
+            EndIf
+            Turtle.Speed = arg
+         EndIf
       EndIf
       
    ElseIf command = _For Then
@@ -990,7 +1047,7 @@ Function ParseTerm(pos)
 EndFunction
 
 Function ParseFactor(pos)
-   If TW.IsClosed Then
+   If Terminated Or TW.IsClosed Then
       Return {}
    EndIf
    
@@ -1084,8 +1141,7 @@ Sub ReportError(msg, line, tokenIndex)
             {
                "خطأ عند الكلمة رقم ", tokenIndex,
                " في السطر رقم ", line, ":",
-               Chars.Lf, msg,
-               Chars.Lf, ProEndMsg
+               Chars.Lf, msg
             },
             ""
          ), True
@@ -1590,6 +1646,10 @@ _EnText1 = "Text"
 _EnText2 = "Text2"
 _EnNumber1 = "Number"
 _EnNumber2 = "Number2"
+_EnMove = "Move"
+_EnTurn = "Turn"
+_EnSpeed = "Speed"
+_EnTurtle = "Turtle"
 _EnRandom = "Random"
 _EnWait = "Wait"
 _EnSound = "Play"
@@ -1670,6 +1730,18 @@ Sub InitTransTokes(forwardConversion)
       OrgTokes[_EnNumber1] = _Number1
       OrgTokes[_EnNumber2] = _Number2
       DestTokes[_EnNumber1] = _EnNumber1
+      
+      OrgTokes[_EnMove] = _Move
+      DestTokes[_EnMove] = _EnMove
+      
+      OrgTokes[_EnTurn] = _Turn
+      DestTokes[_EnTurn] = _EnTurn
+      
+      OrgTokes[_EnSpeed] = _Speed
+      DestTokes[_EnSpeed] = _EnSpeed
+      
+      OrgTokes[_EnTurtle] = _Turtle
+      DestTokes[_EnTurtle] = _EnTurtle
       
       OrgTokes[_EnRandom] = _Random
       DestTokes[_EnRandom] = _EnRandom
@@ -1766,6 +1838,18 @@ Sub InitTransTokes(forwardConversion)
       OrgTokes[_EnNumber1] = _EnNumber1
       OrgTokes[_EnNumber2] = _EnNumber1
       DestTokes[_EnNumber1] = _Number1
+      
+      OrgTokes[_EnMove] = _EnMove
+      DestTokes[_EnMove] = _Move
+      
+      OrgTokes[_EnTurn] = _EnTurn
+      DestTokes[_EnTurn] = _Turn
+      
+      OrgTokes[_EnSpeed] = _EnSpeed
+      DestTokes[_EnSpeed] = _Speed
+      
+      OrgTokes[_EnTurtle] = _EnTurtle
+      DestTokes[_EnTurtle] = _Turtle
       
       OrgTokes[_EnRandom] = _EnRandom
       DestTokes[_EnRandom] = _Random
@@ -1964,6 +2048,57 @@ Function ConvertLine()
             Return DestTokes[_EnWrite] & " " & result[1]
          EndIf
          Return "TW.Write(" & result[1] & ")"
+      EndIf
+      
+   ElseIf Text.AreEquals(command, OrgTokes[_EnMove], False) Then
+      nextCommand = Tokens[2][3]
+      If Text.AreEquals(nextCommand, OrgTokes[_EnTurtle], False) Then
+         If tokensCount = 2 Then
+            If ConvertToEnSahla Then
+               Return DestTokes[_EnMove] & " " & DestTokes[_EnTurtle]
+            EndIf
+            Return "Turtle.Move(100)"
+         Else
+            result = BuildExpressionText(3)
+            If ConvertToEnSahla Then
+               Return DestTokes[_EnMove] & " " & DestTokes[_EnTurtle] & " " & result[1]
+            EndIf
+            Return "Turtle.Move(" & result[1] & ")"
+         EndIf
+      EndIf
+      
+   ElseIf Text.AreEquals(command, OrgTokes[_EnTurn], False) Then
+      nextCommand = Tokens[2][3]
+      If Text.AreEquals(nextCommand, OrgTokes[_EnTurtle], False) Then
+         If tokensCount = 2 Then
+            If ConvertToEnSahla Then
+               Return DestTokes[_EnTurn] & " " & DestTokes[_EnTurtle]
+            EndIf
+            Return "Turtle.Turn(90)"
+         Else
+            result = BuildExpressionText(3)
+            If ConvertToEnSahla Then
+               Return DestTokes[_EnTurn] & " " & DestTokes[_EnTurtle] & " " & result[1]
+            EndIf
+            Return "Turtle.Turn(" & result[1] & ")"
+         EndIf
+      EndIf
+      
+   ElseIf Text.AreEquals(command, OrgTokes[_EnSpeed], False) Then
+      nextCommand = Tokens[2][3]
+      If Text.AreEquals(nextCommand, OrgTokes[_EnTurtle], False) Then
+         If tokensCount = 2 Then
+            If ConvertToEnSahla Then
+               Return DestTokes[_EnSpeed] & " " & DestTokes[_EnTurtle]
+            EndIf
+            Return "Turtle.Speed = 25"
+         Else
+            result = BuildExpressionText(3)
+            If ConvertToEnSahla Then
+               Return DestTokes[_EnSpeed] & " " & DestTokes[_EnTurtle] & " " & result[1]
+            EndIf
+            Return "Turtle.Speed = " & result[1]
+         EndIf
       EndIf
       
    ElseIf Text.AreEquals(command, OrgTokes[_EnFor], False) Then

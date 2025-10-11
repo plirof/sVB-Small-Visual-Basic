@@ -45,6 +45,7 @@
 '    MnuConditions: MenuItem
 '    MnuLoops: MenuItem
 '    MnuSounds: MenuItem
+'    MnuTurtle: MenuItem
 '    MnuAbout: MenuItem
 '}
 
@@ -94,8 +95,9 @@ MnuInput = "frmmain.mnuinput"
 MnuConditions = "frmmain.mnuconditions"
 MnuLoops = "frmmain.mnuloops"
 MnuSounds = "frmmain.mnusounds"
+MnuTurtle = "frmmain.mnuturtle"
 MnuAbout = "frmmain.mnuabout"
-_path = Program.Directory + "\frmMain.xaml"
+_path = Program.Directory + "\frmmain.xaml"
 FrmMain = Forms.LoadForm("FrmMain", _path)
 Form.SetArgsArr(frmmain, Stack.PopValue("_frmmain_argsArr"))
 '#Events{
@@ -137,6 +139,7 @@ Form.SetArgsArr(frmmain, Stack.PopValue("_frmmain_argsArr"))
 '    MnuInput: OnClick
 '    MnuConditions: OnClick
 '    MnuLoops: OnClick
+'    MnuTurtle: OnClick
 '}
 
 ' MnuNew Events:
@@ -299,6 +302,10 @@ MenuItem.OnClick = MnuConditions_OnClick
 ' MnuLoops Events:
 Control.HandleEvents(MnuLoops)
 MenuItem.OnClick = MnuLoops_OnClick
+
+' MnuTurtle Events:
+Control.HandleEvents(MnuTurtle)
+MenuItem.OnClick = MnuTurtle_OnClick
 
 
 Form.Show(Me)

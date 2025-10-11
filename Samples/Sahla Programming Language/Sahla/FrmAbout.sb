@@ -13,7 +13,7 @@ LblKP.AppendBoldLink(X, "https://www.amazon.com/dp/B0DNX2ZR4D")
 
 X = LblSamples.Text
 LblSamples.Text = ""
-LblSamples.AppendBoldLink(X, "%USERPROFILE%\Documents\Sahla Samples")
+LblSamples.AppendBoldLink(X, "%USERPROFILE%\Documents\Sahla-Ar Samples")
 
 
 Sub Form_OnKeyDown()

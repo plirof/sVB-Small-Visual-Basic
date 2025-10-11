@@ -60,17 +60,21 @@ Namespace Microsoft.SmallVisualBasic.Statements
             Dim subName = Name.Text
             Dim subName2 = subName.ToLower
             If Name.Contains(line, column, True) Then
-                bag.CompletionItems.Add(
-                    New CompletionItem() With {
-                       .DisplayName = subName,
-                       .ItemType = CompletionItemType.SubroutineName,
-                       .Key = subName,
-                       .ReplacementText = subName,
-                       .DefinitionIdintifier = (From subroutine In bag.SymbolTable.Subroutines
-                                                Where subroutine.Key = subName2).FirstOrDefault.Value
-                    }
-                )
+                Dim subTokens = (From subroutine In bag.SymbolTable.Subroutines
+                                 Where subroutine.Key.StartsWith(subName2))
 
+                For Each subToken In subTokens
+                    subName = subToken.Value.Text
+                    bag.CompletionItems.Add(
+                        New CompletionItem() With {
+                           .DisplayName = subName,
+                           .ItemType = CompletionItemType.SubroutineName,
+                           .Key = subName,
+                           .ReplacementText = subName,
+                           .DefinitionIdintifier = subToken.Value
+                        }
+                    )
+                Next
             ElseIf Args IsNot Nothing AndAlso Args.Count > 0 AndAlso line >= Args(0).StartToken.Line Then
                 CompletionHelper.FillExpressionItems(bag)
                 CompletionHelper.FillSubroutines(bag, True)
